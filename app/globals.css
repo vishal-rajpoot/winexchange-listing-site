@@ -13,6 +13,9 @@
     --foreground: #ededed;
   }
 }
+.paragraph {
+  @apply text-base py-3 px-8 text-center; /* Use Tailwind's @apply directive if you're using Tailwind with PostCSS */
+}
 
 body {
   color: var(--foreground);
