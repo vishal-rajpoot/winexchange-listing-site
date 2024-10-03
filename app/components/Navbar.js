@@ -10,6 +10,7 @@ const Navbar = () => {
     about: false,
     contact: false,
   });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRefs = {
     home: useRef(),
     about: useRef(),
@@ -23,45 +24,86 @@ const Navbar = () => {
     }));
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      // Check if any of the dropdown menus are clicked outside
-      Object.keys(dropdownRefs).forEach((menu) => {
-        if (
-          dropdown[menu] &&
-          dropdownRefs[menu].current &&
-          !dropdownRefs[menu].current.contains(event.target)
-        ) {
-          setDropdown((prev) => ({ ...prev, [menu]: false }));
-        }
-      });
-    };
+  const closeAllDropdowns = () => {
+    setDropdown({ home: false, about: false, contact: false });
+  };
 
+  const handleClickOutside = (event) => {
+    // Close mobile menu if clicked outside
+    if (!event.target.closest(".navbar") && isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+      closeAllDropdowns();
+    }
+
+    // Check if any dropdowns should be closed when clicking outside
+    Object.keys(dropdownRefs).forEach((menu) => {
+      if (
+        dropdown[menu] &&
+        dropdownRefs[menu].current &&
+        !dropdownRefs[menu].current.contains(event.target)
+      ) {
+        setDropdown((prev) => ({ ...prev, [menu]: false }));
+      }
+    });
+  };
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdown, dropdownRefs]);
+  }, [dropdown, dropdownRefs, isMobileMenuOpen]);
 
   return (
-    <nav className="bg-white text-gray-500 py-4 shadow-2xl">
+    <nav className="bg-white text-gray-500 py-4 shadow-2xl navbar">
       <div className="container mx-auto flex justify-between items-center">
         <div className="font-bold text-xl text-black">Winexchange</div>
-        <ul className="flex space-x-8">
+
+        {/* Hamburger Icon for Mobile */}
+        <div
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+        >
+          <button className="focus:outline-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation Links */}
+        <ul
+          className={`flex-col md:flex md:flex-row ${
+            isMobileMenuOpen ? "block" : "hidden"
+          } md:block space-y-2 md:space-y-0 md:space-x-8 absolute md:relative bg-white w-full md:w-auto z-10`}
+        >
           {/* Home Menu */}
           <li className="relative">
             <button
-              onClick={() => toggleDropdown("home")}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded"
+              onClick={() => {
+                toggleDropdown("home");
+                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
+              }}
+              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
             >
               Online Casino
             </button>
             {dropdown.home && (
               <div
                 ref={dropdownRefs.home}
-                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
+                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/"
@@ -94,15 +136,18 @@ const Navbar = () => {
           {/* About Menu */}
           <li className="relative">
             <button
-              onClick={() => toggleDropdown("about")}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded"
+              onClick={() => {
+                toggleDropdown("about");
+                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
+              }}
+              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
             >
               Online Betting
             </button>
             {dropdown.about && (
               <div
                 ref={dropdownRefs.about}
-                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
+                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/about"
@@ -123,15 +168,18 @@ const Navbar = () => {
           {/* Contact Menu */}
           <li className="relative">
             <button
-              onClick={() => toggleDropdown("contact")}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded"
+              onClick={() => {
+                toggleDropdown("contact");
+                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
+              }}
+              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
             >
               Contact
             </button>
             {dropdown.contact && (
               <div
                 ref={dropdownRefs.contact}
-                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
+                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/contact"
