@@ -10,7 +10,8 @@ const Navbar = () => {
     about: false,
     contact: false,
   });
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile menu state
+
   const dropdownRefs = {
     home: useRef(),
     about: useRef(),
@@ -24,108 +25,97 @@ const Navbar = () => {
     }));
   };
 
-  const closeAllDropdowns = () => {
-    setDropdown({ home: false, about: false, contact: false });
-  };
-
-  const handleClickOutside = (event) => {
-    // Close mobile menu if clicked outside
-    if (!event.target.closest(".navbar") && isMobileMenuOpen) {
-      setIsMobileMenuOpen(false);
-      closeAllDropdowns();
-    }
-
-    // Check if any dropdowns should be closed when clicking outside
-    Object.keys(dropdownRefs).forEach((menu) => {
-      if (
-        dropdown[menu] &&
-        dropdownRefs[menu].current &&
-        !dropdownRefs[menu].current.contains(event.target)
-      ) {
-        setDropdown((prev) => ({ ...prev, [menu]: false }));
-      }
-    });
-  };
-
+  // Close dropdown when clicking outside
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      Object.keys(dropdownRefs).forEach((menu) => {
+        if (
+          dropdown[menu] &&
+          dropdownRefs[menu].current &&
+          !dropdownRefs[menu].current.contains(event.target)
+        ) {
+          setDropdown((prev) => ({ ...prev, [menu]: false }));
+        }
+      });
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdown, dropdownRefs, isMobileMenuOpen]);
+  }, [dropdown, dropdownRefs]);
+
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false); // Close mobile menu when clicking on a link
+  };
 
   return (
-    <nav className="bg-white text-gray-500 py-4 shadow-2xl navbar">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-white text-gray-500 py-4 shadow-2xl">
+      <div className="container mx-auto flex justify-around items-center">
         <div className="font-bold text-xl text-black">Winexchange</div>
 
-        {/* Hamburger Icon for Mobile */}
-        <div
-          className="md:hidden"
-          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+        {/* Hamburger icon for mobile */}
+        <button
+          className="text-black md:hidden"
+          onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
         >
-          <button className="focus:outline-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
               strokeWidth={2}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </button>
-        </div>
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
+          </svg>
+        </button>
 
-        {/* Navigation Links */}
-        <ul
-          className={`flex-col md:flex md:flex-row ${
-            isMobileMenuOpen ? "block" : "hidden"
-          } md:block space-y-2 md:space-y-0 md:space-x-8 absolute md:relative bg-white w-full md:w-auto z-10`}
-        >
+        {/* Desktop Navigation */}
+        <ul className="hidden md:flex space-x-10">
           {/* Home Menu */}
           <li className="relative">
             <button
-              onClick={() => {
-                toggleDropdown("home");
-                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
-              }}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
+              onClick={() => toggleDropdown("home")}
+              className="font-bold py-2 px-4 hover:bg-gray-100 rounded"
             >
               Online Casino
             </button>
             {dropdown.home && (
               <div
                 ref={dropdownRefs.home}
-                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
+                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Sky247
                 </Link>
                 <Link
                   href="/"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
-                  Bet barter
+                  Bet Barter
                 </Link>
                 <Link
                   href="/"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Bluechip
                 </Link>
                 <Link
                   href="/"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   CricketBook
                 </Link>
@@ -136,28 +126,27 @@ const Navbar = () => {
           {/* About Menu */}
           <li className="relative">
             <button
-              onClick={() => {
-                toggleDropdown("about");
-                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
-              }}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
+              onClick={() => toggleDropdown("about")}
+              className="font-bold py-2 px-4 hover:bg-gray-100 rounded"
             >
               Online Betting
             </button>
             {dropdown.about && (
               <div
                 ref={dropdownRefs.about}
-                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
+                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/about"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Betting Exchange sites
                 </Link>
                 <Link
                   href="/about/team"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Cricket Betting sites
                 </Link>
@@ -168,34 +157,34 @@ const Navbar = () => {
           {/* Contact Menu */}
           <li className="relative">
             <button
-              onClick={() => {
-                toggleDropdown("contact");
-                setIsMobileMenuOpen(true); // Keep mobile menu open when clicking
-              }}
-              className="font-bold py-2 px-4 hover:bg-gray-200 rounded w-full text-left"
+              onClick={() => toggleDropdown("contact")}
+              className="font-bold py-2 px-4 hover:bg-gray-100 rounded"
             >
               Contact
             </button>
             {dropdown.contact && (
               <div
                 ref={dropdownRefs.contact}
-                className="mt-2 py-2 w-full bg-white rounded-lg shadow-lg"
+                className="absolute left-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-lg"
               >
                 <Link
                   href="/contact"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Contact Form
                 </Link>
                 <Link
                   href="/contact/email"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Email Us
                 </Link>
                 <Link
                   href="/contact/support"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  onClick={handleLinkClick}
                 >
                   Support
                 </Link>
@@ -203,6 +192,125 @@ const Navbar = () => {
             )}
           </li>
         </ul>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <ul className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg p-4 space-y-4">
+            {/* Home Links with Children */}
+            <li className="relative">
+              <button
+                onClick={() => toggleDropdown("home")}
+                className="block w-full text-left font-bold py-2 px-4 hover:bg-gray-100 rounded"
+              >
+                Online Casino
+              </button>
+              {dropdown.home && (
+                <div
+                  ref={dropdownRefs.home}
+                  className="py-2 w-full bg-white rounded-lg shadow-lg"
+                >
+                  <Link
+                    href="/"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Sky247
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Bet Barter
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Bluechip
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    CricketBook
+                  </Link>
+                </div>
+              )}
+            </li>
+
+            {/* About Links with Children */}
+            <li className="relative">
+              <button
+                onClick={() => toggleDropdown("about")}
+                className="block w-full text-left font-bold py-2 px-4 hover:bg-gray-100 rounded"
+              >
+                Online Betting
+              </button>
+              {dropdown.about && (
+                <div
+                  ref={dropdownRefs.about}
+                  className="py-2 w-full bg-white rounded-lg shadow-lg"
+                >
+                  <Link
+                    href="/about"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Betting Exchange sites
+                  </Link>
+                  <Link
+                    href="/about/team"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Cricket Betting sites
+                  </Link>
+                </div>
+              )}
+            </li>
+
+            {/* Contact Links */}
+            <li className="relative">
+              <button
+                onClick={() => toggleDropdown("contact")}
+                className="block w-full text-left font-bold py-2 px-4 hover:bg-gray-100 rounded"
+              >
+                Contact
+              </button>
+              {dropdown.contact && (
+                <div
+                  ref={dropdownRefs.contact}
+                  className="py-2 w-full bg-white rounded-lg shadow-lg"
+                >
+                  <Link
+                    href="/contact"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Contact Form
+                  </Link>
+                  <Link
+                    href="/contact/email"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Email Us
+                  </Link>
+                  <Link
+                    href="/contact/support"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    onClick={handleLinkClick}
+                  >
+                    Support
+                  </Link>
+                </div>
+              )}
+            </li>
+          </ul>
+        )}
       </div>
     </nav>
   );
