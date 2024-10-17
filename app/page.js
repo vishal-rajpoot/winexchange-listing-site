@@ -1,23 +1,31 @@
 "use client";
+import Link from "next/link";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { usePathname } from "next/navigation";
 
-const blogs = [
+const works = [
   {
     id: 1,
-    title: "First Blog Post",
-    excerpt: "This is the first blog post...",
+    title: "AI-Powered Investment App",
+    description:
+      "Built an AI-powered investment platform to predict stock trends.",
+    welcomeBonus: "50% Up to 50,000 INR",
+    ratings: "4.8",
   },
   {
     id: 2,
-    title: "Second Blog Post",
-    excerpt: "This is the second blog post...",
+    title: "Next-Gen Blogging Platform",
+    description: "Developed a blogging platform with real-time commenting.",
+    welcomeBonus: "75% Up to 30,000 INR",
+    ratings: "4.9",
   },
   {
     id: 3,
-    title: "Third Blog Post",
-    excerpt: "This is the third blog post...",
+    title: "Real-Time Sports Betting App",
+    description: "Launched a sports betting app with real-time odds updates.",
+    welcomeBonus: "100% Up to 25,000 INR",
+    ratings: "5.0",
   },
 ];
 
@@ -71,30 +79,29 @@ export default function Home() {
 
       {/* Blog List */}
       <div className="container mx-auto py-8">
-        <h1 className="text-2xl font-bold mb-6 ">
-          Best Online Casino Real Money Sites India
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">Our Best Projects</h1>
         <div className="grid grid-cols-1 gap-6">
-          {blogs.map((blog) => (
-            <div
-              key={blog.id}
-              className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition flex border border-orange-300 justify-between"
-            >
-              <h2 className="text-2xl font-semibold mb-2">Winexchange</h2>
-              <div className="flex flex-col text-center">
-                <p className="text-gray-600 text-sm mb-2">Welcome Bonus</p>
-                <p className="text-black text-lg mb-2">100% Up to 25,000 INR</p>
+          {works.map((work) => (
+            <Link href={`/works/${work.id}`} key={work.id}>
+              <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition flex border border-orange-300 justify-between cursor-pointer">
+                <h2 className="text-2xl font-semibold mb-2">{work.title}</h2>
+                <div className="flex flex-col text-center">
+                  <p className="text-gray-600 text-sm mb-2">Welcome Bonus</p>
+                  <p className="text-black text-lg mb-2">{work.welcomeBonus}</p>
+                </div>
+                <div className="flex flex-col text-center">
+                  <p className="text-gray-600 text-sm mb-2">
+                    Ratings {work.ratings}
+                  </p>
+                </div>
+                <div className="flex flex-col text-center">
+                  <button className="text-white text-lg mb-2 rounded-lg bg-green-500">
+                    Play Now
+                  </button>
+                  <p className="text-black text-md mb-2">Read Review</p>
+                </div>
               </div>
-              <div className="flex flex-col text-center">
-                <p className="text-gray-600 text-sm mb-2">Ratings 5.0</p>
-              </div>
-              <div className="flex flex-col text-center">
-                <button className="text-white text-lg mb-2 rounded-lg bg-green-500">
-                  Play Now
-                </button>
-                <p className="text-black text-md mb-2">Read Review</p>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
